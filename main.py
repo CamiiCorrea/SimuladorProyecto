@@ -1,7 +1,7 @@
 # Importamos las librerías necesarias
 import yfinance as yf
 import matplotlib.pyplot as plt
-from portfolio import Portafolio   # usamos la clase que hicimos
+from portfolio import Portafolio, RentaFija   # usamos la clase que hicimos
 
 # Definimos una lista pequeña de acciones
 lista_acciones = ["AAPL", "MSFT", "GOOGL"]
