@@ -7,7 +7,9 @@ from portfolio import Portafolio   # usamos la clase que hicimos
 lista_acciones = ["AAPL", "MSFT", "GOOGL"]
 
 # Descargamos los precios históricos de esas acciones
-datos = yf.download(lista_acciones, start="2024-01-01", end="2024-12-31")["Adj Close"]
+datos = yf.download(lista_acciones, start="2024-01-01", end="2024-12-31")["Close"]
+
+
 
 # Creamos un portafolio con $3000 de dinero inicial
 mi_portafolio = Portafolio(dinero_inicial=3000)
