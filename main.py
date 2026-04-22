@@ -1,46 +1,56 @@
-# Importamos las librerías necesarias
 import yfinance as yf
 import matplotlib.pyplot as plt
-from portfolio import Portafolio, RentaFija   # usamos la clase que hicimos
-
-# Definimos una lista pequeña de acciones
-lista_acciones = ["AAPL", "MSFT", "GOOGL"]
-
-# Descargamos los precios históricos de esas acciones
-datos = yf.download(lista_acciones, start="2024-01-01", end="2024-12-31")["Close"]
+from portfolio import Portafolio
 
 
-# Creamos un portafolio con $3000 de dinero inicial
-mi_portafolio = Portafolio(dinero_inicial=3000)
+# Lista de al menos 10 acciones
+tickers = ["AAPL","MSFT","TSLA","AMZN","GOOG","META","NVDA","JPM","NFLX","BAC"]
 
-# Ejemplo: comprar 1 acción de Apple al último precio disponible
-precio_apple = datos["AAPL"].iloc[-1]   # último precio de Apple
-mi_portafolio.comprar("AAPL", 1, precio_apple)
+# Descargar precios históricos
+data = yf.download(tickers, period="1mo")["Close"]
 
-# Mostramos resultados en consola
-print("Dinero restante:", mi_portafolio.dinero)
-print("Acciones en portafolio:", mi_portafolio.acciones)
+# Crear portafolio
+mi_portafolio = Portafolio(dinero_inicial=100000)
+valor_inicial = mi_portafolio.dinero
 
-# Graficamos la evolución de Apple
-datos["AAPL"].plot()
-plt.title("Precio histórico de Apple")
-plt.xlabel("Fecha")
-plt.ylabel("Precio en USD")
-plt.show() 
+# Invertir en renta fija
+mi_portafolio.invertir_renta_fija(2000, tasa_diaria=0.0005)
 
-# Simulamos renta fija: $1000 invertidos con 0.05% de interés diario
-renta_fija = RentaFija(dinero_inicial=1000, tasa_interes_diaria=0.0005)
+# Simular 10 días
+evolucion = []
+for dia in range(10):
+    precios_dia = data.iloc[dia]
 
-# Simulamos 100 días
-for _ in range(100):
-    renta_fija.pasar_dia()
+    # AQUÍ es donde pegas las compras de varias empresas
+    precio_aapl = precios_dia["AAPL"]
+    mi_portafolio.comprar("AAPL", 1, precio_aapl,
+                          precio_min=precio_aapl*0.95,
+                          precio_max=precio_aapl*1.05)
 
-print("Dinero en renta fija después de 100 días:", round(renta_fija.dinero, 2))
+    precio_msft = precios_dia["MSFT"]
+    mi_portafolio.comprar("MSFT", 1, precio_msft,
+                          precio_min=precio_msft*0.95,
+                          precio_max=precio_msft*1.05)
 
-# Graficamos la evolución de la renta fija
-plt.plot(renta_fija.historial)
-plt.title("Evolución de la renta fija (CDT)")
+    precio_tsla = precios_dia["TSLA"]
+    mi_portafolio.comprar("TSLA", 1, precio_tsla,
+                          precio_min=precio_tsla*0.95,
+                          precio_max=precio_tsla*1.05)
+
+    # Liquidar renta fija cada día
+    mi_portafolio.liquidar_renta_fija()
+
+    # Guardar evolución
+    evolucion.append(mi_portafolio.dinero + sum([rf.dinero for rf in mi_portafolio.renta_fija]))
+
+
+# Mostrar portafolio final
+mi_portafolio.mostrar_portafolio()
+print("Rentabilidad neta:", mi_portafolio.calcular_rentabilidad_neta(valor_inicial), "%")
+
+# Graficar evolución
+plt.plot(evolucion, marker="o")
+plt.title("Evolución histórica del portafolio")
 plt.xlabel("Días")
-plt.ylabel("Dinero en USD")
+plt.ylabel("Valor total ($)")
 plt.show()
-
