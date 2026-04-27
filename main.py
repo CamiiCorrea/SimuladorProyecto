@@ -48,9 +48,13 @@ for dia in range(10):
 mi_portafolio.mostrar_portafolio()
 print("Rentabilidad neta:", mi_portafolio.calcular_rentabilidad_neta(valor_inicial), "%")
 
-# Graficar evolución
-plt.plot(evolucion, marker="o")
-plt.title("Evolución histórica del portafolio")
-plt.xlabel("Días")
-plt.ylabel("Valor total ($)")
+# Graficar evolución del portafolio
+plt.plot(evolucion, label="Portafolio total")
+
+# Graficar evolución de una acción específica
+plt.plot(data["AAPL"], label="Apple (AAPL)")
+plt.plot(data["MSFT"], label="Microsoft (MSFT)")
+
+plt.legend()
+plt.title("Evolución del portafolio y acciones")
 plt.show()

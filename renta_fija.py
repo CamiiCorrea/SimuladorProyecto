@@ -1,10 +1,9 @@
-# Clase para simular renta fija (CDT o bono)
 class RentaFija:
-    def __init__(self, dinero_inicial, tasa_interes_diaria):
+    def __init__(self, dinero_inicial, tasa_diaria):
         self.dinero = dinero_inicial
-        self.tasa = tasa_interes_diaria
+        self.tasa = tasa_diaria
         self.dias = 0
-        self.historial = [dinero_inicial]
+        self.historial = []
 
     def pasar_dia(self):
         self.dinero *= (1 + self.tasa)
